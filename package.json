@@ -1,0 +1,19 @@
+{
+  "name": "android-web-launcher",
+  "version": "0.1.1",
+  "description": "launcher.js for WebLauncher (A special made android launcher application)",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dreagonmon/web-launcher.git"
+  },
+  "author": "dreagonmon",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Dreagonmon/web-launcher/issues"
+  },
+  "homepage": "https://github.com/Dreagonmon/web-launcher#readme"
+}
