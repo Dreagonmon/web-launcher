@@ -49,7 +49,7 @@ const getCache = async (src) => {
         const req = makeRequest(src);
         const resp = await cache.match(req, {
             ignoreMethod: true,
-            ignoreSearch: true,
+            ignoreSearch: false,
             ignoreVary: true,
         });
         if (resp) {
@@ -75,7 +75,7 @@ const updateCache = async (src, value) => {
         const resp = makeResponse(value);
         await cache.delete(req, {
             ignoreMethod: true,
-            ignoreSearch: true,
+            ignoreSearch: false,
             ignoreVary: true,
         });
         await cache.put(req, resp);
@@ -90,6 +90,7 @@ const updateCache = async (src, value) => {
  * @returns {Promise<string>} dataURL
  */
 const loadImageToDataURL = (src) => {
+    if (!src.startsWith("http")) { return src; }
     return new Promise((resolve, reject) => {
         const img = new Image();
         const onload = () => {
@@ -105,6 +106,7 @@ const loadImageToDataURL = (src) => {
         };
         img.addEventListener("load", onload);
         img.addEventListener("error", onerror);
+        img.crossOrigin = "anonymous"; // allow image cors
         img.src = src + `&t=${new Date().getTime()}`; // force refresh
     });
 };

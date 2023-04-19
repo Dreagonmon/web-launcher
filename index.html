@@ -1,12 +1,57 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <title>Tests</title>
-        <script type="module" src="index.html.js"></script>
-    </head>
-    <body>
-        <!-- body -->
-        <canvas></canvas>
-    </body>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Launcher</title>
+    <style>
+        html {
+            background-color: white;
+        }
+    </style>
+    <script type="module">
+        // import { launcher as api, convertToCachedImageURL } from "./dist/launcher.js";
+        import { launcher as api, convertToCachedImageURL } from "./index.js";
+        if (!api.isRunningInLauncher()) {
+            api.startDebugSession();
+        }
+        function launch (img) {
+            let packageName = img.getAttribute("data-package");
+            let activity = img.getAttribute("data-activity");
+            api.launchApplication(packageName, activity);
+        }
+        window.onload = async function () {
+            let grant = await api.requestPermission(api.PERMISSION_LAUNCHER);
+            let apps = await api.getApplicationList();
+            for (let i in apps) {
+                let appinfo = apps[ i ];
+                let img = document.createElement("img");
+                img.loading = "lazy";
+                let temp_src = api.getApplicationIconSrc(appinfo.package, appinfo.activity, 64);
+                img.src = await convertToCachedImageURL(temp_src);
+                img.setAttribute("data-package", appinfo.package);
+                img.setAttribute("data-activity", appinfo.activity);
+                img.onclick = launch.bind(img, img);
+                document.body.appendChild(img);
+                let title = document.createElement("div");
+                title.innerText = appinfo.name;
+                document.body.appendChild(title);
+                let hr = document.createElement("hr");
+                document.body.appendChild(hr);
+                let br = document.createElement("br");
+                document.body.appendChild(br);
+            }
+        };
+    </script>
+</head>
+
+<body>
+    <h1>Launcher Test</h1>
+    <p>&lt;- This is the simple page.</p>
+    <hr>
+    <h2>App List</h2>
+    <hr>
+</body>
+
 </html>
