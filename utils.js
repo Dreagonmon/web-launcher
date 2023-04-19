@@ -105,7 +105,7 @@ const loadImageToDataURL = (src) => {
         };
         img.addEventListener("load", onload);
         img.addEventListener("error", onerror);
-        img.src = src;
+        img.src = src + `&t=${new Date().getTime()}`; // force refresh
     });
 };
 

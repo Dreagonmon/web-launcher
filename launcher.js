@@ -79,7 +79,7 @@ export class Launcher {
         if (this.#mockServer) {
             return this.#mockServer.getApplicationIconSrc(packageName, activity, size);
         }
-        return `${this.#address}icon?package=${packageName}&activity=${activity}&size=${size}&t=${new Date().getTime()}`;
+        return `${this.#address}icon?package=${packageName}&activity=${activity}&size=${size}`;
     };
 
     /**

@@ -4,7 +4,7 @@
   "description": "launcher.js for WebLauncher (A special made android launcher application)",
   "main": "index.js",
   "scripts": {
-    "test": "node index.js"
+    "bundle": "npx esbuild index.js --outfile=dist/launcher.js --bundle --minify --sourcemap --target=esnext --format=esm"
   },
   "repository": {
     "type": "git",
@@ -15,5 +15,5 @@
   "bugs": {
     "url": "https://github.com/Dreagonmon/web-launcher/issues"
   },
-  "homepage": "https://github.com/Dreagonmon/web-launcher#readme"
+  "homepage": "https://github.com/Dreagonmon/web-launcher"
 }
