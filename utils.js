@@ -1,8 +1,4 @@
-import { executeIDBRequest, getObjectStore, getOrCreateObjectStore, openIndexDatabase } from "./indexdb.js";
-
-const KEY_DATABASE = "__launcher_cache__";
-const VERSION_CACHE_STORE = 1;
-const KEY_OBJECT_STORE = "__image_data_url_cache__";
+const KEY_CACHE_STORE = "__launcher_image_data_url_cache__";
 
 export class ApplicationInfo {
     constructor () {
@@ -18,30 +14,51 @@ export class LauncherResponseError extends Error {
     }
 }
 
+/**
+ * makeRequest
+ * @param {string} src 
+ * @returns {Request}
+ */
+const makeRequest = (src) => {
+    return new Request(src, {
+        method: "GET",
+    });
+};
+
+/**
+ * makeRequest
+ * @param {string} value 
+ * @returns {Response}
+ */
+const makeResponse = (value) => {
+    return new Response(value, {
+        status: 200,
+    });
+};
+
 /* Cache Control */
 /**
  * 
  * @param {string} src 
- * @returns {Promise<string>}
+ * @returns {Promise<string | undefined>}
  */
 const getCache = async (src) => {
-    let db = undefined;
+    if (!src.startsWith("http")) { return undefined; }
     try {
-        db = await openIndexDatabase(KEY_DATABASE, VERSION_CACHE_STORE);
-        const store = getObjectStore(db, KEY_OBJECT_STORE, "readonly");
-        if (store === undefined) {
-            return undefined;
+        const cache = await self.caches.open(KEY_CACHE_STORE);
+        const req = makeRequest(src);
+        const resp = await cache.match(req, {
+            ignoreMethod: true,
+            ignoreSearch: true,
+            ignoreVary: true,
+        });
+        if (resp) {
+            return await resp.text();
         }
-        const cache = await executeIDBRequest(store.get(src));
-        return cache;
     } catch (err) {
         console.error(err);
-        return undefined;
-    } finally {
-        if (db !== undefined) {
-            db.close();
-        }
     }
+    return undefined;
 };
 
 /**
@@ -51,21 +68,19 @@ const getCache = async (src) => {
  * @returns {Promise<void>}
  */
 const updateCache = async (src, value) => {
-    let db = undefined;
+    if (!src.startsWith("http")) { return; }
     try {
-        db = await openIndexDatabase(KEY_DATABASE, VERSION_CACHE_STORE);
-        console.log(db);
-        const store = getOrCreateObjectStore(db, KEY_OBJECT_STORE, "readwrite");
-        console.log(store);
-        const key = await executeIDBRequest(store.put(value, src));
-        console.log(key);
-        console.log("update cache:", key);
+        const cache = await self.caches.open(KEY_CACHE_STORE);
+        const req = makeRequest(src);
+        const resp = makeResponse(value);
+        await cache.delete(req, {
+            ignoreMethod: true,
+            ignoreSearch: true,
+            ignoreVary: true,
+        });
+        await cache.put(req, resp);
     } catch (err) {
         console.error(err);
-    } finally {
-        if (db !== undefined) {
-            db.close();
-        }
     }
 };
 
@@ -108,7 +123,6 @@ export const convertToCachedImageURL = async (src, reload = false) => {
         return cache;
     }
     if (reload) {
-        console.log("Cache Mismatch");
         const url = await loadImageToDataURL(src);
         await updateCache(src, url);
         return url;
