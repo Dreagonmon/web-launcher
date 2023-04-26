@@ -1,6 +1,6 @@
 {
   "name": "android-web-launcher",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "launcher.js for WebLauncher (A special made android launcher application)",
   "main": "index.js",
   "scripts": {

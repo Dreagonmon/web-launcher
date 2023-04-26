@@ -15,8 +15,6 @@ import { launcher, PERMISSION_LAUNCHER, convertToCachedImageURL } from "android-
 // or if you want a isolated instance, import class
 // import { Launcher } from "android-web-launcher";
 // const launcher = new Launcher();
-// auto select port, or set your own
-// const launcher = new Launcher(10801);
 
 // You can enable debug mode, this will allow you debug on your computer.
 if (!launcher.isRunningInLauncher()) {
