@@ -94,7 +94,7 @@ export class MockServer {
      */
     async getApplicationList () {
         if (!this.#hasLaunchPermission()) {
-            console.error("launchApplication: You need request permission first!");
+            console.error("getApplicationList: You need request permission first!");
             throw new LauncherResponseError("No Permission");
         }
         return APP_LIST;
@@ -172,6 +172,20 @@ export class MockServer {
         pkg2.style.wordBreak = "break-all";
         frame.appendChild(pkg2);
         document.body.appendChild(frame);
+        return true;
+    };
+
+    /**
+     * openWebpageInBrowser
+     * @param {string} targetURL 
+     * @returns {Promise<boolean>}
+     */
+    async openWebpage (targetURL) {
+        if (!this.#hasLaunchPermission()) {
+            console.error("openWebpage: You need request permission first!");
+            throw new LauncherResponseError("No Permission");
+        }
+        window.open(targetURL, "_blank");
         return true;
     };
 

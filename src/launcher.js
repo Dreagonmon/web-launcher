@@ -101,6 +101,23 @@ export class Launcher {
     };
 
     /**
+     * openWebpageInBrowser
+     * @param {string} targetURL 
+     * @returns {Promise<boolean>}
+     */
+    async openWebpage (targetURL) {
+        if (this.#mockServer) {
+            return await this.#mockServer.openWebpage(targetURL);
+        }
+        const url = `${this.#address}open-webpage?href=${encodeURIComponent(targetURL)}&t=${new Date().getTime()}`;
+        const resp = await fetch(url);
+        if (resp.status !== 200) {
+            throw new LauncherResponseError("status code not 200!");
+        }
+        return true;
+    };
+
+    /**
      * requestPermission
      * @param {string} name 
      * @returns {Promise<boolean>} success

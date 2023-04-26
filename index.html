@@ -43,12 +43,17 @@
                 document.body.appendChild(br);
             }
         };
+        window.openNewPage = async () => {
+            await api.openWebpage("https://www.bing.com");
+        };
     </script>
 </head>
 
 <body>
     <h1>Launcher Test</h1>
     <p>&lt;- This is the simple page.</p>
+    <hr>
+    <button onclick="openNewPage();">Open new page</button><br/>
     <hr>
     <h2>App List</h2>
     <hr>

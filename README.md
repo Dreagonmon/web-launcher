@@ -32,4 +32,6 @@ let src = launcher.getApplicationIconSrc(app.package, app.activity, 128);
 let dataurl = await convertToCachedImageURL(src);
 // launch application
 await launcher.launchApplication(packageName, activity);
+// open webpage in the default browser
+await launcher.openWebpage("https://www.bing.com");
 ```
